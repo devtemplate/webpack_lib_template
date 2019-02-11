@@ -1,8 +1,8 @@
 import './index.css';
 import hello from '../../common/util';
 
-console.log(hello('empty form'));
+console.log(hello('empty alert'));
 
 export default {
-    name: 'form'
+    name: 'alert'
 };

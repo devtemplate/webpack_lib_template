@@ -13,15 +13,21 @@ setTimeout(() => {
         import('UILib.button').then(( ret ) => {
             console.log('load button ready', ret);
         });
-        import('UILib.button').then(( ret ) => {
-            console.log('load button ready', ret);
-        });
+        // import('UILib.button').then(( ret ) => {
+        //     console.log('load button ready', ret);
+        // });
     
-        setTimeout(() => {
-            import('UILib.form').then(( ret ) => {
-                console.log('load form ready', ret);
-            });
-        }, 5000);
+        // setTimeout(() => {
+        //     import('UILib.form').then(( ret ) => {
+        //         console.log('load form ready', ret);
+        //     });
+        // }, 1000);
+
+        // setTimeout(() => {
+        //     import('UILib.alert').then(( ret ) => {
+        //         console.log('load alert ready', ret);
+        //     });
+        // }, 1000);
     })
-}, 5000);
+}, 1000);
 

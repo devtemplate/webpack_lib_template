@@ -57,23 +57,29 @@ module.exports = {
             // Every module prefixed with "global-" becomes external
             // "global-abc" -> abc
             if (/^UILib\./.test(request)) {
-                console.log('>>>>>  var ' + request);
                 // return callback(null, "var " + request.substr(6));
                 // webpack 本身并未进行 amd cmd 的polyfill，所以在浏览器中运行的时候
                 // 依然是全局变量，不过还在，在webpack.lib.js中，针对各种情况都进行了导出
                 // 所以这里只需要从全局返回即可
                 let name = request.substr(6);
-                return callback(null, `var (function() {
-                        let url = 'http://localhost:8001/${name}.js';
-                        function lazyLoad(url) {
-                            let el = document.createElement('script');
-                            el.src = url;
-                            document.head.appendChild(el);
+                console.log('name', request, name);
+
+                return callback(
+                    null,
+                    `var new Promise(function(resolve, reject) {
+                        let url = 'http://localhost:8001/UILib.${name}.js';
+                        var s = document.createElement("script");
+                        s.src = url;
+                        s.onload = function() {
+                            resolve(window.UILib && UILib[name]);
                         }
-                        lazyLoad(url);
-                        return window.UILib && window.UILib['${name}'.substr(6)];
-                    })();
-                `);
+                        s.onerror = function() {
+                            reject('module load error');
+                        }
+                        document.head.appendChild(s);
+                    });
+                `
+                );
             }
             callback();
         }

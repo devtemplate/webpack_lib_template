@@ -15,13 +15,14 @@ const PORT = 8001;
 module.exports = {
     mode: mode,
     entry: {
-        'button': './src/component/button/index.js',
-        'form': './src/component/form/index.js'
+        button: './src/component/button/index.js' //,
+        // 'form': './src/component/form/index.js',
+        // 'alert': './src/component/alert/index.js'
     },
     output: {
         path: output_dir,
-        filename: '[name].js',
-        library: '[name]',
+        filename: 'UILib.[name].js',
+        library: ['UILib', '[name]'],
         libraryTarget: 'umd',
         jsonpFunction: 'webpackLibJsonp'
     },
@@ -46,7 +47,12 @@ module.exports = {
     devServer: {
         contentBase: output_dir,
         port: PORT,
-        hot: true
+        hot: true,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+            'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
+        }
     },
     resolve: {
         alias: {
@@ -68,7 +74,7 @@ module.exports = {
             chunks: 'all',
             minSize: 0,
             maxSize: 0,
-            minChunks: 2,
+            minChunks: 1,
             maxAsyncRequests: 5,
             maxInitialRequests: 3,
             automaticNameDelimiter: '~',
@@ -77,8 +83,14 @@ module.exports = {
                 default: false,
                 common: {
                     name: 'common',
-                    test: /\.js$/,
-                    minChunks: 2,
+                    test: function(module, chunks) {
+                        let src = module.resource;
+                        let isNodeModule = /\/node_modules\//.test(src);
+                        let isCommon = /\/src\/common\//.test(src);
+
+                        return isNodeModule || isCommon;
+                    },
+                    minChunks: 1,
                     priority: 1,
                     reuseExistingChunk: true
                 }
